@@ -1,0 +1,88 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      DJANGO_SECRET_KEY: "zjxu4!!a7i%tyr^fn)*@153h$esng0#a-3g+%o70yokkn1z+q+"
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_HOST: localhost
+      POSTGRES_PORT: 5432
+
+    services:
+      postgres:
+        image: postgres:12.3
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_DB: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+      - name: Install requirements
+        run: pip install -r ./requirements/base.txt
+      - name: Run tests
+        run: |
+          cd benfordslaw
+          python manage.py migrate --noinput
+          coverage run --rcfile="../.coveragerc" --parallel-mode manage.py test --verbosity 3 --parallel
+          coverage combine --rcfile="../.coveragerc"
+          coverage xml --rcfile="../.coveragerc"
+      - name: Check migrations
+        run: |
+          cd benfordslaw
+          python manage.py makemigrations --check --dry-run
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./benfordslaw/coverage.xml
+
+  lint:
+    runs-on: ubuntu-latest
+    env:
+      DJANGO_SECRET_KEY: "zjxu4!!a7i%tyr^fn)*@153h$esng0#a-3g+%o70yokkn1z+q+"
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+      - name: Install requirements
+        run: pip install -r ./requirements/base.txt
+      - name: Lint code
+        run: flake8 benfordslaw/
+      - name: Check typing
+        run: |
+          cd benfordslaw
+          mypy --config-file ../mypy.ini benfordslaw/
+      - name: Check security
+        run: |
+          cd benfordslaw
+          bandit -r benfordslaw/
+      - uses: brpaz/hadolint-action@master
+        name: Lint dockerfile
+        with:
+          dockerfile: Dockerfile
+      - uses: wagoid/commitlint-github-action@v2
+        name: Lint commit
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
