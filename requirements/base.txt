@@ -1,0 +1,17 @@
+Django==3.1
+psycopg2-binary==2.8.5
+djangorestframework==3.11.1
+django-cors-headers==3.5.0
+factory-boy==3.0.1
+django-extensions==3.0.5
+djangorestframework-camel-case==1.2.0
+ipython==7.17.0
+django-debug-toolbar==2.2
+flake8==3.8.3
+mypy==0.782
+django-stubs==1.5.0
+djangorestframework-stubs==1.2.0
+tblib==1.7.0
+bandit==1.6.2
+coverage==5.2.1
+django-extra-fields==3.0.0
