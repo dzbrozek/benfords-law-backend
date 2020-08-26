@@ -1,6 +1,6 @@
 ## Benford's law
 
-Simple REST API written in Django/DRF to allows you to verify your dataset against the Benford's law (the first-digit law).
+Simple REST API written in Django/DRF that allows you to verify your dataset against the Benford's law (the first-digit law).
 For frontend part visit [benfords-law-frontend](https://github.com/dzbrozek/benfords-law-frontend)
 
 
