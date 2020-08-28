@@ -51,6 +51,11 @@ precommit:
 testci:
 	act -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 --env-file "no-default-env-file" $(arguments)
 
+.PHONY : status
+# List Docker containers
+status:
+	docker-compose ps
+
 .PHONY : help
 # Show help
 help:
