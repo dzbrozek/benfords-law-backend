@@ -67,6 +67,7 @@ class CalcDistributionTestCase(TestCase):
             {'name': 'Third', 'value': '0.63'},
             {'name': 'Fourth', 'value': 'zero'},
             {'name': 'Fifth', 'value': '123'},
+            {'name': 'Sixth', 'value': None},
         ]
 
     def test_calc_distribution(self):
