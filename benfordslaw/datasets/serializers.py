@@ -24,7 +24,7 @@ def calc_distribution(reader: Iterable[dict], column_name: str) -> Dict[int, int
 
     for row in reader:
         try:
-            leading_numbers.append(int(row[column_name].replace('0', '').replace('.', '')[0]))
+            leading_numbers.append(int((row[column_name] or '').replace('0', '').replace('.', '')[0]))
         except KeyError:
             raise serializers.ValidationError(f'Invalid column name: "{column_name}"')
         except (IndexError, ValueError) as e:
