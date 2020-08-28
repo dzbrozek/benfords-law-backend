@@ -2,7 +2,8 @@ import csv
 import io
 import logging
 from collections import Counter
-from typing import Dict, Iterable, cast
+from csv import Dialect
+from typing import Dict, Iterable, Optional, Type, Union, cast
 
 from datasets.models import DataSet
 from drf_extra_fields.fields import Base64FileField
@@ -49,9 +50,13 @@ class DataSetSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('Invalid csv file')
 
         sniffer = csv.Sniffer()
-        dialect = sniffer.sniff(csv_text.read(1024))
+        dialect: Optional[Union[str, Dialect, Type[Dialect]]] = None
+        try:
+            dialect = sniffer.sniff(csv_text.read(1024))
+        except csv.Error:
+            pass
         csv_text.seek(0)
-        reader = csv.DictReader(csv_text, dialect=dialect)
+        reader = csv.DictReader(csv_text, dialect=dialect)  # type: ignore
 
         data = {**validated_data, 'distribution': calc_distribution(reader, column_name)}
 
