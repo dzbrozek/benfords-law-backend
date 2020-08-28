@@ -27,7 +27,7 @@ def calc_distribution(reader: Iterable[dict], column_name: str) -> Dict[int, int
         except KeyError:
             raise serializers.ValidationError(f'Invalid column name: "{column_name}"')
         except (IndexError, ValueError) as e:
-            logger.warning('Invalid value in column "%s". Value: %s. Error %s', column_name, row[column_name], e)
+            logger.warning('Invalid value in column "%s". Value: %s. Error: %s', column_name, row[column_name], e)
 
     return dict(Counter(leading_numbers).items())
 
@@ -39,7 +39,7 @@ class DataSetSerializer(serializers.ModelSerializer):
     class Meta:
         model = DataSet
         fields = ('id', 'name', 'created', 'distribution', 'file', 'column_name')
-        read_only_fields = ('created', 'distribution')
+        read_only_fields = ('distribution',)
 
     def create(self, validated_data: dict) -> DataSet:
         column_name = validated_data.pop('column_name')

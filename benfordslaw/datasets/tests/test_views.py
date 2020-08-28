@@ -26,7 +26,7 @@ class DataSetsAPIViewPostTestCase(APITestCase):
         self.assertEqual(response.json(), DataSetSerializer(data_set).data)
 
 
-class DataSetDetailsAPIViewGetTestCase(APITestCase):
+class DataSetAPIViewGetTestCase(APITestCase):
     def test_get_data_set(self):
         data_set = DataSetFactory()
 
