@@ -25,6 +25,7 @@ def calc_distribution(reader: Iterable[dict], column_name: str) -> Dict[int, int
         try:
             leading_numbers.append(int(row[column_name].replace('0', '').replace('.', '')[0]))
         except KeyError:
+            print(row)
             raise serializers.ValidationError(f'Invalid column name: "{column_name}"')
         except (IndexError, ValueError) as e:
             logger.warning('Invalid value in column "%s". Value: %s. Error: %s', column_name, row[column_name], e)
@@ -48,7 +49,10 @@ class DataSetSerializer(serializers.ModelSerializer):
         except UnicodeDecodeError:
             raise serializers.ValidationError('Invalid csv file')
 
-        reader = csv.DictReader(csv_text)
+        sniffer = csv.Sniffer()
+        dialect = sniffer.sniff(csv_text.read(1024))
+        csv_text.seek(0)
+        reader = csv.DictReader(csv_text, dialect=dialect)
 
         data = {**validated_data, 'distribution': calc_distribution(reader, column_name)}
 
