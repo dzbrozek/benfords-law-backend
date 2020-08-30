@@ -56,7 +56,7 @@ class DataSetSerializerTest(TestCase):
 
         self.assertEqual(data_set.name, data['name'])
         self.assertTrue(data_set.created)
-        self.assertDictEqual(data_set.distribution, {2: 2, 1: 1})
+        self.assertDictEqual(data_set.distribution, {1: 1, 2: 2, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0})
 
 
 class CalcDistributionTestCase(TestCase):
