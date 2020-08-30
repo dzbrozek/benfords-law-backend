@@ -71,7 +71,9 @@ class CalcDistributionTestCase(TestCase):
         ]
 
     def test_calc_distribution(self):
-        self.assertDictEqual(calc_distribution(self.reader, 'value'), {1: 2, 4: 1, 6: 1})
+        self.assertDictEqual(
+            calc_distribution(self.reader, 'value'), {1: 2, 2: 0, 3: 0, 4: 1, 5: 0, 6: 1, 7: 0, 8: 0, 9: 0}
+        )
 
     def test_unknown_column(self):
         with self.assertRaises(serializers.ValidationError) as cm:
