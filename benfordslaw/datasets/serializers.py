@@ -31,7 +31,7 @@ def calc_distribution(reader: Iterable[dict], column_name: str) -> Dict[int, int
         except (IndexError, ValueError) as e:
             logger.warning('Invalid value in column "%s". Value: %s. Error: %s', column_name, row[column_name], e)
 
-    return dict(Counter(leading_numbers).items())
+    return {**dict([(x, 0) for x in range(1, 10)]), **dict(Counter(leading_numbers).items())}
 
 
 class DataSetSerializer(serializers.ModelSerializer):
